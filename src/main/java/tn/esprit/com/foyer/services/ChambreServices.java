@@ -61,7 +61,7 @@ public class ChambreServices implements IChambreService{
     }
         return b;
     }
-    @Scheduled(fixedRate = 300000)
+    /*@Scheduled(fixedRate = 300000)
     void pourcentageChambreParTypeChambre()
     {
     log.info("start pourcentageChambreParTypeChambre");
@@ -109,7 +109,7 @@ public class ChambreServices implements IChambreService{
                 }
         );
 
-    }
+    }*/
 
 
 }

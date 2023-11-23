@@ -43,7 +43,7 @@ public class BlocServices implements IBlocService{
         blocRepository.deleteById(idBloc);
     }
 
-    @Scheduled(fixedRate = 10000)
+    /*@Scheduled(fixedRate = 10000)
 
     public void performTask() {
         log.info("start");
@@ -66,5 +66,5 @@ public class BlocServices implements IBlocService{
 
 
 
-    }
+    }*/
 }

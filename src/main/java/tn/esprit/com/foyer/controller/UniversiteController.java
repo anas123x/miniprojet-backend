@@ -14,6 +14,8 @@ import java.util.List;
 public class UniversiteController {
     UniversiteServices universiteServices;
 
+
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/retrieve-all-universite")
     public List<Universite> retrieveAllUniversite(){
         return universiteServices.retrieveAllUniversities();

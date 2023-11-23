@@ -10,12 +10,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-@Entity
+
 @Getter
 @Setter
-
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Table( name = "Bloc")
 public class Bloc implements Serializable {
     @Id
