@@ -1,10 +1,13 @@
 package tn.esprit.com.foyer.services;
 
 import tn.esprit.com.foyer.entities.Etudiant;
+import tn.esprit.com.foyer.entities.Reservation;
+import tn.esprit.com.foyer.mailModel.MailStructure;
 
 import java.util.List;
 
 public interface IEtudiantService {
+
     List<Etudiant> retrieveAllEtudiants();
 
     Etudiant addEtudiant(Etudiant e);
@@ -14,5 +17,10 @@ public interface IEtudiantService {
     Etudiant retrieveEtudiant(Long idEtudiant);
 
     void removeEtudiant(Long idEtudiant);
-    List<Etudiant> addEtudiants (List<Etudiant> etudiants);
+
+    Etudiant affecterEtudiantAReservation (String nomEt, String prenomEt, Long idReservation) ;
+
+    public void passerUneReservation(long idEtudiant, Reservation res);
+
 }
+
