@@ -6,6 +6,6 @@ import tn.esprit.com.foyer.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-  Optional<User> findByEmail(String email);
+  User findByEmail(String email);
 
 }

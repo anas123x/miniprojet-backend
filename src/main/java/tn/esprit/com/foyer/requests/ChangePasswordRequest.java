@@ -1,12 +1,12 @@
-package tn.esprit.com.foyer;
+package tn.esprit.com.foyer.requests;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChangePasswordRequest {
 
     private String currentPassword;

@@ -1,5 +1,6 @@
 package tn.esprit.com.foyer.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,15 +10,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
-import tn.esprit.com.foyer.AuthenticationRequest;
-import tn.esprit.com.foyer.AuthenticationResponse;
-import tn.esprit.com.foyer.RegisterRequest;
+import tn.esprit.com.foyer.entities.Role;
+import tn.esprit.com.foyer.requests.AuthenticationRequest;
+import tn.esprit.com.foyer.requests.AuthenticationResponse;
+import tn.esprit.com.foyer.requests.RegisterRequest;
 import tn.esprit.com.foyer.config.JwtService;
 import tn.esprit.com.foyer.entities.Token;
 import tn.esprit.com.foyer.entities.TokenType;
@@ -43,7 +41,7 @@ public class AuthenticationService {
         .lastname(request.getLastname())
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
-        .role(request.getRole())
+        .role(Role.USER)
         .build();
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
@@ -51,17 +49,17 @@ public class AuthenticationService {
     saveUserToken(savedUser, jwtToken);
     return AuthenticationResponse.builder()
         .accessToken(jwtToken)
-            .refreshToken(refreshToken)
+
         .build();
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
-    log.info(request.toString());
+
 
     AuthenticationResponse response;
 
-    var user = repository.findByEmail(request.getEmail()).orElse(null);
-
+    User user = repository.findByEmail(request.getEmail());
+    log.info("ROLE"+user.getAuthorities().toString());
     if (user == null) {
       // Return error if email doesn't exist
       return AuthenticationResponse.builder()
@@ -78,13 +76,25 @@ public class AuthenticationService {
       );
 
       var jwtToken = jwtService.generateToken(user);
-      var refreshToken = jwtService.generateRefreshToken(user);
       revokeAllUserTokens(user);
       saveUserToken(user, jwtToken);
 
+      // Extracting claims as JSON
+      String claimsJson = jwtService.extractClaim(jwtToken, claims -> {
+        // Convert claims to JSON here using a library like Jackson or Gson
+        // For example using Jackson:
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+          return objectMapper.writeValueAsString(claims);
+        } catch (JsonProcessingException e) {
+          // Handle JSON processing exception
+          e.printStackTrace();
+          return null;
+        }
+      });
+
       response = AuthenticationResponse.builder()
               .accessToken(jwtToken)
-              .refreshToken(refreshToken)
               .build();
     } catch (BadCredentialsException e) {
       // Handle incorrect password
@@ -95,6 +105,7 @@ public class AuthenticationService {
 
     return response;
   }
+
 
 
 
@@ -134,15 +145,14 @@ public class AuthenticationService {
     refreshToken = authHeader.substring(7);
     userEmail = jwtService.extractUsername(refreshToken);
     if (userEmail != null) {
-      var user = this.repository.findByEmail(userEmail)
-              .orElseThrow();
+      User user = this.repository.findByEmail(userEmail);
+
       if (jwtService.isTokenValid(refreshToken, user)) {
         var accessToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);
         var authResponse = AuthenticationResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .build();
         new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
       }

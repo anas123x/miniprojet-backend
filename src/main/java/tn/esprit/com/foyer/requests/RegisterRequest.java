@@ -1,4 +1,4 @@
-package tn.esprit.com.foyer;
+package tn.esprit.com.foyer.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
