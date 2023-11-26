@@ -4,4 +4,6 @@ import tn.esprit.com.foyer.mailModel.MailStructure;
 
 public interface IMailService {
     public void sendMail(String mail , MailStructure mailStructure);
+    public void sendMailToStudentWithValidReservation();
+    public void sendMailToStudentWithValidReservation2(MailStructure mailStructure);
 }

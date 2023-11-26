@@ -18,4 +18,16 @@ public class MailController {
         return "mail send with success !!";
     }
 
+    @GetMapping("/sendMailToStudentWithValidReservation")
+    public String sendMailToStudentWithValidReservation(){
+        mailService.sendMailToStudentWithValidReservation();
+        return "this student has a valid reservation";
+    }
+
+    @PostMapping ("/sendMailToStudentWithValidReservation2")
+    public String sendMailToStudentWithValidReservation2(@RequestBody MailStructure mailStructure){
+        mailService.sendMailToStudentWithValidReservation2(mailStructure);
+        return "mail sent to student succeffully!!";
+    }
+
 }

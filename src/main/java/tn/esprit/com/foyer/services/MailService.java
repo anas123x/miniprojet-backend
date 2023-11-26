@@ -1,18 +1,26 @@
 package tn.esprit.com.foyer.services;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import tn.esprit.com.foyer.entities.Etudiant;
+import tn.esprit.com.foyer.entities.Reservation;
 import tn.esprit.com.foyer.mailModel.MailStructure;
+import tn.esprit.com.foyer.repositories.EtudiantRepository;
 
+import java.util.List;
 
 
 @Service
 public class MailService implements IMailService {
+
+    @Autowired
+    EtudiantRepository etudiantRepository;
+
+    @Autowired
+    EtudiantService etudiantService;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -22,7 +30,7 @@ public class MailService implements IMailService {
     @Override
     public void sendMail(String mail, MailStructure mailStructure) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom(fromMail);
+        simpleMailMessage.setFrom(fromMail); //votreuniversite@gmail.com
         simpleMailMessage.setSubject(mailStructure.getSubject());
         simpleMailMessage.setText(mailStructure.getMessage());
         simpleMailMessage.setTo(mail);
@@ -31,7 +39,43 @@ public class MailService implements IMailService {
 
     }
 
+    @Override
+    public void sendMailToStudentWithValidReservation() {
+        List<Etudiant> etudiants = etudiantService.retrieveAllEtudiants();
 
-//votreuniversite@gmail.com
+        for (Etudiant etudiant: etudiants){
+            List<Reservation> reservations = etudiant.getReservations();
+            for (Reservation reservation: reservations){
+                if ( reservation.getEstValid() == true){
+                    String gmail = etudiant.getEmail();
+
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void sendMailToStudentWithValidReservation2(MailStructure mailStructure) {
+        List<Etudiant> etudiants = etudiantService.retrieveAllEtudiants();
+
+        for (Etudiant etudiant: etudiants){
+            List<Reservation> reservations = etudiant.getReservations();
+            for (Reservation reservation: reservations){
+                if ( reservation.getEstValid() == true){
+                    String gmail = etudiant.getEmail();
+                    SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+                    simpleMailMessage.setFrom(fromMail); //votreuniversite@gmail.com
+                    simpleMailMessage.setSubject(mailStructure.getSubject());
+                    simpleMailMessage.setText(mailStructure.getMessage());
+                    simpleMailMessage.setTo(gmail);
+
+                    mailSender.send(simpleMailMessage);
+
+                }
+            }
+        }
+    }
+
 
 }
