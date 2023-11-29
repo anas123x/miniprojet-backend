@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,25 +37,35 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
 
-  public AuthenticationResponse register(RegisterRequest request) {
+  public ResponseEntity register(RegisterRequest request) {
+    User user1 = repository.findByEmail(request.getEmail());
+    if (user1 != null) {
+      // Return error if email already exists
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+              .body(AuthenticationResponse.builder()
+                      .error("Email already exists")
+                      .build());
+    }
+
     var user = User.builder()
-        .firstname(request.getFirstname())
-        .lastname(request.getLastname())
-        .email(request.getEmail())
-        .password(passwordEncoder.encode(request.getPassword()))
-        .role(Role.USER)
-        .build();
+            .firstname(request.getFirstname())
+            .lastname(request.getLastname())
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .role(Role.USER)
+            .build();
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
     saveUserToken(savedUser, jwtToken);
-    return AuthenticationResponse.builder()
-        .accessToken(jwtToken)
+    return ResponseEntity.status(HttpStatus.ACCEPTED)
+            .body(AuthenticationResponse.builder()
+                    .accessToken(jwtToken)
+                    .build());
 
-        .build();
   }
 
-  public AuthenticationResponse authenticate(AuthenticationRequest request) {
+  public ResponseEntity authenticate(AuthenticationRequest request) {
 
 
     AuthenticationResponse response;
@@ -61,9 +73,10 @@ public class AuthenticationService {
     User user = repository.findByEmail(request.getEmail());
     if (user == null) {
       // Return error if email doesn't exist
-      return AuthenticationResponse.builder()
-              .error("Email not found. Please check your email address.")
-              .build();
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+              .body(AuthenticationResponse.builder()
+                      .error("Email not found")
+                      .build());
     }
 
     try {
@@ -97,12 +110,14 @@ public class AuthenticationService {
               .build();
     } catch (BadCredentialsException e) {
       // Handle incorrect password
-      return AuthenticationResponse.builder()
-              .error("Incorrect password. Please check your credentials.")
-              .build();
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+              .body(AuthenticationResponse.builder()
+                      .error("Incorrect Password")
+                      .build());
     }
 
-    return response;
+    return ResponseEntity.status(HttpStatus.ACCEPTED)
+            .body(response);
   }
 
 
