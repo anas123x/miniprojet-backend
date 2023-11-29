@@ -59,7 +59,6 @@ public class AuthenticationService {
     AuthenticationResponse response;
 
     User user = repository.findByEmail(request.getEmail());
-    log.info("ROLE"+user.getAuthorities().toString());
     if (user == null) {
       // Return error if email doesn't exist
       return AuthenticationResponse.builder()

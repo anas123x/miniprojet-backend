@@ -11,8 +11,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
+
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import static tn.esprit.com.foyer.Permissions.*;
+import static tn.esprit.com.foyer.entities.Role.ADMIN;
 
 
 @Configuration
@@ -34,7 +37,6 @@ public class SecurityConfiguration {
             "/swagger-ui.html"};
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final LogoutHandler logoutHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,17 +45,18 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
+                                .requestMatchers("/api/v1/admin/**").hasAnyRole(ADMIN.name())
+                                .requestMatchers(GET, "/api/v1/admin/**").hasAnyAuthority(ADMIN_READ.name() )
+                                .requestMatchers(POST, "/api/v1/admin/**").hasAnyAuthority(ADMIN_CREATE.name() )
+                                .requestMatchers(PUT, "/api/v1/admin/**").hasAnyAuthority(ADMIN_UPDATE.name())
+                                .requestMatchers(DELETE, "/api/v1/admin/**").hasAnyAuthority(ADMIN_DELETE.name())
                                 .anyRequest()
                                 .authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logout ->
-                        logout.logoutUrl("/api/v1/auth/logout")
-                                .addLogoutHandler(logoutHandler)
-                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-                )
+
         ;
 
         return http.build();
