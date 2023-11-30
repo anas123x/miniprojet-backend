@@ -14,14 +14,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import tn.esprit.com.foyer.entities.Role;
+import tn.esprit.com.foyer.entities.*;
+import tn.esprit.com.foyer.repositories.EtudiantRepository;
 import tn.esprit.com.foyer.requests.AuthenticationRequest;
 import tn.esprit.com.foyer.requests.AuthenticationResponse;
 import tn.esprit.com.foyer.requests.RegisterRequest;
 import tn.esprit.com.foyer.config.JwtService;
-import tn.esprit.com.foyer.entities.Token;
-import tn.esprit.com.foyer.entities.TokenType;
-import tn.esprit.com.foyer.entities.User;
 import tn.esprit.com.foyer.repositories.TokenRepository;
 import tn.esprit.com.foyer.repositories.UserRepository;
 
@@ -36,8 +34,17 @@ public class AuthenticationService {
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
+  private final EtudiantRepository etudiantRepository;
 
   public ResponseEntity register(RegisterRequest request) {
+    /*Etudiant etudiant = etudiantRepository.findByEmailEtudiant(request.getEmail());
+    if (etudiant == null) {
+      // Return error if email already exists
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+              .body(AuthenticationResponse.builder()
+                      .error("Email n'appartient a aucun etudiant")
+                      .build());
+    }*/
     User user1 = repository.findByEmail(request.getEmail());
     if (user1 != null) {
       // Return error if email already exists
@@ -57,7 +64,7 @@ public class AuthenticationService {
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
-    saveUserToken(savedUser, jwtToken);
+    //saveUserToken(savedUser, jwtToken);
     return ResponseEntity.status(HttpStatus.ACCEPTED)
             .body(AuthenticationResponse.builder()
                     .accessToken(jwtToken)
@@ -88,7 +95,7 @@ public class AuthenticationService {
       );
 
       var jwtToken = jwtService.generateToken(user);
-      revokeAllUserTokens(user);
+      //revokeAllUserTokens(user);
       saveUserToken(user, jwtToken);
 
       // Extracting claims as JSON

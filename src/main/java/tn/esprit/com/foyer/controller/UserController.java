@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.com.foyer.dto.UserDTO;
+import tn.esprit.com.foyer.entities.Role;
 import tn.esprit.com.foyer.requests.ChangePasswordRequest;
 import tn.esprit.com.foyer.requests.ChangePasswordResponse;
 import tn.esprit.com.foyer.services.UserService;
@@ -30,9 +31,8 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
-    @GetMapping("/getDataByEmail/{email}")
-    public UserDTO getDataByEmail(@PathVariable String email) {
-        return service.getUserDataByEmail(email);
+    @GetMapping("/getDataByToken")
+    public UserDTO getDataByTokenl() {
+        return service.getUserDataByToken();
     }
 }

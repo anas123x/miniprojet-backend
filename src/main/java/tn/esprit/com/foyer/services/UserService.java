@@ -1,24 +1,36 @@
 package tn.esprit.com.foyer.services;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tn.esprit.com.foyer.dto.UserDTO;
+import tn.esprit.com.foyer.entities.Role;
 import tn.esprit.com.foyer.requests.ChangePasswordRequest;
 import tn.esprit.com.foyer.entities.User;
 import tn.esprit.com.foyer.repositories.UserRepository;
 import tn.esprit.com.foyer.requests.ChangePasswordResponse;
-
+import tn.esprit.com.foyer.config.JwtService;
 import java.security.Principal;
-import java.util.Optional;
+import java.util.Collection;
+
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
-
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository repository;
+    @NonNull
+    HttpServletRequest request;
     public ChangePasswordResponse changePassword(ChangePasswordRequest request, Principal connectedUser) {
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
         ChangePasswordResponse response = new ChangePasswordResponse();
@@ -30,10 +42,7 @@ public class UserService {
         }
 
         // check if the two new passwords are the same
-        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
-            response.setMessage("Passwords are not the same");
-            return response;
-        }
+
 
         // update the password
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -44,12 +53,30 @@ public class UserService {
         response.setMessage("Password changed successfully");
         return response;
     }
-    public UserDTO getUserDataByEmail(String email) {
-        User user = repository.findByEmail(email);
-        // Map User entity to UserDTO if needed
-        if (user != null) {
-            return UserDTO.fromEntity(user); // Assuming UserDTO has a method to convert User entity to DTO
+
+    public UserDTO getUserDataByToken() {
+
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+        final String userEmail;
+
+        jwt = authHeader.substring(7);
+        userEmail = jwtService.extractUsername(jwt);
+
+        try {
+            User user = repository.findByEmail(userEmail);
+
+            if (user != null) {
+
+                return UserDTO.fromEntity(user); // Assuming UserDTO has a method to convert User entity to DTO
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace(); // For demonstration purposes, you might want to log the exception
+
+
         }
+
         return null;
     }
 }
