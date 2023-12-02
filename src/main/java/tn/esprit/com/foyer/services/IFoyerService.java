@@ -11,4 +11,6 @@ public interface IFoyerService {
     Foyer retrieveFoyer (long idFoyer);
     void archiverFoyer (long idFoyer);
     void deleteFoyer(long idFoyer);
+    Foyer addFoyerWithBloc (Foyer foyer);
+
 }

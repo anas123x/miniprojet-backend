@@ -1,5 +1,6 @@
 package tn.esprit.com.foyer.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,10 +23,18 @@ public class Reservation implements Serializable {
     @Id
     @Column(name = "idReservation", length = 50)
     private String idReservation; // Clé primaire
+    @JsonIgnore
+    @Temporal(TemporalType.DATE)
     private Date anneeReservation;
+    private String numReservation;
     private boolean estValide;
-    @ManyToMany(mappedBy="reservations", cascade = CascadeType.ALL)
-    private Set<Etudiant> etudiants;
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Etudiant> etudiants;
+    public void setNumReservation(String numReservation) {
+        this.numReservation = numReservation;
+    }
+
 
 
 }
