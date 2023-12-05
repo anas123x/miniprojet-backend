@@ -1,6 +1,8 @@
 package tn.esprit.com.foyer.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.com.foyer.entities.Etudiant;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/etudiant")
 public class EtudiantController {
     IEtudiantService etudiantService;
@@ -35,6 +38,7 @@ public class EtudiantController {
 
     @PutMapping("/updateetudiant")
     public Etudiant updateEtudiant(@RequestBody Etudiant e) {
+
         Etudiant etudiant = etudiantService.updateEtudiant(e);
         return etudiant;
     }
@@ -62,6 +66,13 @@ public class EtudiantController {
     @PostMapping("/passerUneReservation/{id-etudiant}")
     public void passerUneReservation(@PathVariable("id-etudiant") long idEtudiant , @RequestBody Reservation res){
         etudiantService.passerUneReservation(idEtudiant , res);
+    }
+
+    @GetMapping("/findEtudiantwithemail/{e-mail}")
+    @JsonFormat
+    public Etudiant findEtudiantwithemail(@PathVariable("e-mail") String email){
+        Etudiant etudiant = etudiantService.findEtudiantwithemail(email);
+        return etudiant;
     }
 
 

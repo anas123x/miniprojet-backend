@@ -1,6 +1,7 @@
 package tn.esprit.com.foyer.services;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,6 +18,7 @@ import java.util.List;
 
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class EtudiantService implements IEtudiantService{
     EtudiantRepository etudiantRepository;
@@ -36,7 +38,7 @@ public class EtudiantService implements IEtudiantService{
 
     @Override
     public Etudiant updateEtudiant(Etudiant e) {
-
+        log.info("azedaze");
         return etudiantRepository.save(e);
     }
 
@@ -77,6 +79,14 @@ public class EtudiantService implements IEtudiantService{
         etudiant.setReservations(reservations);
         etudiantRepository.save(etudiant);
     }
+
+    @Override
+    public Etudiant findEtudiantwithemail(String email) {
+        Etudiant etudiant = etudiantRepository.findEtudiantByEmail(email);
+        return etudiant;
+    }
+
+
 
 
 }

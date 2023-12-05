@@ -22,5 +22,8 @@ public interface IEtudiantService {
 
     public void passerUneReservation(long idEtudiant, Reservation res);
 
+    public Etudiant findEtudiantwithemail(String email);
+
+
 }
 
