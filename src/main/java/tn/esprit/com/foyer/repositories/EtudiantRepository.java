@@ -5,8 +5,9 @@ import org.springframework.stereotype.Repository;
 import tn.esprit.com.foyer.entities.Etudiant;
 
 @Repository
+
 public interface EtudiantRepository extends JpaRepository<Etudiant,Long> {
-
-Etudiant findByEmailEtudiant(String email);
-
+    public Etudiant findEtudiantByNomEtAndPrenomEt(String nomEt, String prenomEt);
+    public Etudiant findEtudiantByEmail(String email);
+    public Etudiant findEtudiantByNomEt(String nom);
 }

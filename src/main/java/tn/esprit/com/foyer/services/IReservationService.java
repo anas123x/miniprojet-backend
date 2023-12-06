@@ -3,16 +3,19 @@ package tn.esprit.com.foyer.services;
 import tn.esprit.com.foyer.entities.Etudiant;
 import tn.esprit.com.foyer.entities.Reservation;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IReservationService {
-    List<Reservation> retrieveAllReservation();
+   public Reservation updateReservation (Reservation res);
+    public Reservation retrieveReservation (long idReservation);
 
-    Reservation addReservation(Reservation r);
+    public List<Reservation> getReservationParAnneeUniversitaire(Date anneeUniversitaire );
 
-    Reservation updateReservation(Reservation r);
+    public Reservation addReservation (Reservation res);
+    public List<Reservation> retrieveReservations();
 
-    Reservation retrieveReservation(Long idReservation);
+    public double statistiques();
 
-    void removeReservation(Long idReservation);
+    public void validerReservation(long idReservation);
 }

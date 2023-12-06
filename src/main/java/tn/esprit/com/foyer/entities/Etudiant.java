@@ -1,11 +1,16 @@
 package tn.esprit.com.foyer.entities;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table (name = "Etudiant")
 public class Etudiant implements Serializable {
@@ -18,8 +23,9 @@ public class Etudiant implements Serializable {
     private long cin;
     private String ecole;
 
-    private String emailEtudiant;
+    private String email;
     @Temporal(TemporalType.DATE)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     private Date dateNaissance;
 
     @ManyToMany
@@ -82,10 +88,11 @@ public class Etudiant implements Serializable {
     }
 
     public String getEmail() {
-        return emailEtudiant;
+        return email;
     }
 
     public void setEmail(String email) {
-        this.emailEtudiant = email;
+        this.email = email;
     }
 }
+
