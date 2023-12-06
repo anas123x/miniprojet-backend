@@ -1,6 +1,5 @@
 package tn.esprit.com.foyer.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +8,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,12 +27,8 @@ public class Foyer implements Serializable {
 
     @Column(columnDefinition = "boolean default false")
     private boolean archived;
-    @OneToOne(mappedBy = "foyer")
-    private Universite universite;
-    @JsonIgnore
-
-    @OneToMany(mappedBy = "foyer" , cascade = CascadeType.ALL)
-    private List<Bloc> bloc;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="foyer")
+    private Set<Bloc> bloc;
 
 
 }

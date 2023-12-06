@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.com.foyer.entities.Bloc;
 import tn.esprit.com.foyer.entities.Chambre;
-import tn.esprit.com.foyer.entities.TypeChambrePourcentage;
 import tn.esprit.com.foyer.services.BlocServices;
 import tn.esprit.com.foyer.services.ChambreServices;
 
-import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -38,10 +36,5 @@ public class ChambreController {
     public void  affecterChambreBloc(@PathVariable("nomBloc") String nomBloc,@RequestBody List<Long> ch){
           chambreServices.affecterChambresABloc(ch,nomBloc);
 
-    }
-
-    @GetMapping("/calculerPourcentageChambre")
-    public HashSet<TypeChambrePourcentage> calculerPourcentageChambre1(@RequestParam boolean estValide) {
-        return chambreServices.calculerPourcentageChambreParTypeChambre1(estValide);
     }
 }
