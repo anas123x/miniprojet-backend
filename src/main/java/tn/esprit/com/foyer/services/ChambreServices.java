@@ -8,11 +8,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.com.foyer.entities.Bloc;
 import tn.esprit.com.foyer.entities.Chambre;
+import tn.esprit.com.foyer.entities.TypeChambre;
+import tn.esprit.com.foyer.entities.TypeChambrePourcentage;
 import tn.esprit.com.foyer.repositories.BlocRepository;
 import tn.esprit.com.foyer.repositories.ChambreRepository;
 
 import java.sql.Time;
 import java.time.Year;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,6 +63,10 @@ public class ChambreServices implements IChambreService{
       chambreRepository.save(ch);
     }
         return b;
+    }
+    @Override
+    public List<Chambre> getChambresParNomBloc(String nomBloc) {
+        return chambreRepository.getChambresParNomBloc(nomBloc);
     }
     /*@Scheduled(fixedRate = 300000)
     void pourcentageChambreParTypeChambre()
@@ -110,6 +117,21 @@ public class ChambreServices implements IChambreService{
         );
 
     }*/
+    @Override
+    public HashSet<TypeChambrePourcentage> calculerPourcentageChambreParTypeChambre1(boolean estValide) {
+        Long totalChambres = chambreRepository.count();
+        HashSet<TypeChambrePourcentage> resultSet = new HashSet<>();
+
+        for (TypeChambre typeChambre : TypeChambre.values()) {
+            Float total = chambreRepository.nbrChambreParType(typeChambre, estValide);
+            float pourcentage = (total / totalChambres) * 100;
+
+            TypeChambrePourcentage chambreInfo = new TypeChambrePourcentage(typeChambre, pourcentage);
+            resultSet.add(chambreInfo);
+        }
+
+        return resultSet;
+    }
 
 
 }
