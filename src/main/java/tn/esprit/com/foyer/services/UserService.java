@@ -55,24 +55,19 @@ public class UserService {
     }
 
     public UserDTO getUserDataByToken() {
-
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-
         jwt = authHeader.substring(7);
         userEmail = jwtService.extractUsername(jwt);
-
         try {
             User user = repository.findByEmail(userEmail);
-
             if (user != null) {
-
-                return UserDTO.fromEntity(user); // Assuming UserDTO has a method to convert User entity to DTO
+                return UserDTO.fromEntity(user);
             }
         } catch (Exception e) {
 
-            e.printStackTrace(); // For demonstration purposes, you might want to log the exception
+            e.printStackTrace();
 
 
         }

@@ -73,10 +73,7 @@ public class AuthenticationService {
   }
 
   public ResponseEntity authenticate(AuthenticationRequest request) {
-
-
     AuthenticationResponse response;
-
     User user = repository.findByEmail(request.getEmail());
     if (user == null) {
       // Return error if email doesn't exist
@@ -98,20 +95,16 @@ public class AuthenticationService {
       //revokeAllUserTokens(user);
       saveUserToken(user, jwtToken);
 
-      // Extracting claims as JSON
+
       String claimsJson = jwtService.extractClaim(jwtToken, claims -> {
-        // Convert claims to JSON here using a library like Jackson or Gson
-        // For example using Jackson:
         ObjectMapper objectMapper = new ObjectMapper();
         try {
           return objectMapper.writeValueAsString(claims);
         } catch (JsonProcessingException e) {
-          // Handle JSON processing exception
           e.printStackTrace();
           return null;
         }
       });
-
       response = AuthenticationResponse.builder()
               .accessToken(jwtToken)
               .build();
