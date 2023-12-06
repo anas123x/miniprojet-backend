@@ -20,7 +20,6 @@ import tn.esprit.com.foyer.requests.AuthenticationRequest;
 import tn.esprit.com.foyer.requests.AuthenticationResponse;
 import tn.esprit.com.foyer.requests.RegisterRequest;
 import tn.esprit.com.foyer.config.JwtService;
-import tn.esprit.com.foyer.repositories.TokenRepository;
 import tn.esprit.com.foyer.repositories.UserRepository;
 
 import java.io.IOException;
@@ -30,7 +29,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthenticationService {
   private final UserRepository repository;
-  private final TokenRepository tokenRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
@@ -93,7 +91,6 @@ public class AuthenticationService {
 
       var jwtToken = jwtService.generateToken(user);
       //revokeAllUserTokens(user);
-      saveUserToken(user, jwtToken);
 
 
       String claimsJson = jwtService.extractClaim(jwtToken, claims -> {
@@ -124,27 +121,7 @@ public class AuthenticationService {
 
 
 
-  private void saveUserToken(User user, String jwtToken) {
-    var token = Token.builder()
-        .user(user)
-        .token(jwtToken)
-        .tokenType(TokenType.BEARER)
-        .expired(false)
-        .revoked(false)
-        .build();
-    tokenRepository.save(token);
-  }
 
-  private void revokeAllUserTokens(User user) {
-    var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-    if (validUserTokens.isEmpty())
-      return;
-    validUserTokens.forEach(token -> {
-      token.setExpired(true);
-      token.setRevoked(true);
-    });
-    tokenRepository.saveAll(validUserTokens);
-  }
 
   public void refreshToken(
           HttpServletRequest request,
@@ -163,8 +140,7 @@ public class AuthenticationService {
 
       if (jwtService.isTokenValid(refreshToken, user)) {
         var accessToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, accessToken);
+
         var authResponse = AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .build();

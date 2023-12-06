@@ -36,8 +36,6 @@ public class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @OneToMany(mappedBy = "user")
-  private List<Token> tokens;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -109,7 +107,6 @@ public class User implements UserDetails {
   }
 
 
-
   public void setPassword(String password) {
     this.password = password;
   }
@@ -121,12 +118,5 @@ public class User implements UserDetails {
   public void setRole(Role role) {
     this.role = role;
   }
-
-  public List<Token> getTokens() {
-    return tokens;
-  }
-
-  public void setTokens(List<Token> tokens) {
-    this.tokens = tokens;
-  }
 }
+

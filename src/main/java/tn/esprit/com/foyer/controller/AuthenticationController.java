@@ -16,7 +16,7 @@ import tn.esprit.com.foyer.services.AuthenticationService;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 

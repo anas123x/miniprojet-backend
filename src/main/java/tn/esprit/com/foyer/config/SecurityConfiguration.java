@@ -24,8 +24,7 @@ import static tn.esprit.com.foyer.entities.Role.ADMIN;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
-            "/api/v1/users/**",
+    private static final String[] WHITE_LIST_URL = {"/api/auth/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -46,11 +45,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-                                .requestMatchers("/api/v1/admin/**").hasAnyRole(ADMIN.name())
-                                .requestMatchers(GET, "/api/v1/admin/**").hasAnyAuthority(ADMIN_READ.name() )
-                                .requestMatchers(POST, "/api/v1/admin/**").hasAnyAuthority(ADMIN_CREATE.name() )
-                                .requestMatchers(PUT, "/api/v1/admin/**").hasAnyAuthority(ADMIN_UPDATE.name())
-                                .requestMatchers(DELETE, "/api/v1/admin/**").hasAnyAuthority(ADMIN_DELETE.name())
+                                .requestMatchers("/api/admin/**").hasAnyRole(ADMIN.name())
+                                .requestMatchers(GET, "/api/admin/**").hasAnyAuthority(ADMIN_READ.name() )
+                                .requestMatchers(POST, "/api/admin/**").hasAnyAuthority(ADMIN_CREATE.name() )
+                                .requestMatchers(PUT, "/api/admin/**").hasAnyAuthority(ADMIN_UPDATE.name())
+                                .requestMatchers(DELETE, "/api/admin/**").hasAnyAuthority(ADMIN_DELETE.name())
                                 .anyRequest()
                                 .authenticated()
                 )
