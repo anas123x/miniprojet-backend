@@ -11,11 +11,12 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/reservation")
 public class ReservationController {
     IReservationService reservationService;
 
-
+    //Admin
     @GetMapping("/retrieveReservations")
     public List<Reservation> retrieveReservations(){
         List<Reservation> reservations = reservationService.retrieveReservations();
@@ -45,14 +46,15 @@ public class ReservationController {
         return reservations;
     }
 
+    //Admin
     @GetMapping("/statistiques")
     public double statistiques(){
         double pourcentageValides = reservationService.statistiques();
         return pourcentageValides;
     }
-
-    @PutMapping("/validerReservation/{id-reservation}")
-    public void validerReservation(@PathVariable("id-reservation") long idReservation){
+    //Admin
+    @GetMapping("/validerReservation/{idReservation}")
+    public void validerReservation(@PathVariable("idReservation") long idReservation){
         reservationService.validerReservation(idReservation);
     }
 }

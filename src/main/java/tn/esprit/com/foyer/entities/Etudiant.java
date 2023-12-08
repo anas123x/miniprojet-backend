@@ -2,6 +2,7 @@ package tn.esprit.com.foyer.entities;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
@@ -29,6 +30,7 @@ public class Etudiant implements Serializable {
     private Date dateNaissance;
 
     @ManyToMany
+
     private List<Reservation> reservations;
 
     public long getIdEtudiant() {

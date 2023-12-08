@@ -20,6 +20,7 @@ import java.util.List;
 public class EtudiantController {
     IEtudiantService etudiantService;
 
+    //Admin
     @GetMapping("/retrieve-all-etudiant")
     List<Etudiant> retrieveAllEtudiants() {
         List<Etudiant> listEtudiants = etudiantService.retrieveAllEtudiants();
@@ -27,7 +28,7 @@ public class EtudiantController {
     }
 
     ;
-
+    //Admin
     @PostMapping("/addetudiant")
     public Etudiant addEtudiant(@RequestBody Etudiant e) {
         Etudiant etudiant = etudiantService.addEtudiant(e);
