@@ -1,10 +1,12 @@
 package tn.esprit.com.foyer.controller;
 
-import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import tn.esprit.com.foyer.entities.Reservation;
 import tn.esprit.com.foyer.services.IReservationService;
-
 
 import java.util.Date;
 import java.util.List;
@@ -14,8 +16,6 @@ import java.util.List;
 @RequestMapping("/api")
 public class ReservationController {
     IReservationService reservationService;
-
-
     @GetMapping("/retrieveReservations")
     public List<Reservation> retrieveReservations(){
         List<Reservation> reservations = reservationService.retrieveReservations();
