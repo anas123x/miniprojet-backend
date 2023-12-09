@@ -1,66 +1,58 @@
 package tn.esprit.com.foyer.controller;
 
-import lombok.AllArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.com.foyer.entity.Reservation;
-import tn.esprit.com.foyer.services.ReservationServicaAvancé;
-import tn.esprit.com.foyer.services.ReservationService;
+
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import tn.esprit.com.foyer.entities.Reservation;
+import tn.esprit.com.foyer.services.IReservationService;
 
 import java.util.Date;
 import java.util.List;
 
-@AllArgsConstructor
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
+@RequestMapping("/api")
 public class ReservationController {
-    ReservationService reservationService;
-
-    ReservationServicaAvancé reservationServicaAvancé;
-    @GetMapping("getallreservations")
-    public List<Reservation> getReservation() {
-        List<Reservation> listReservation = reservationService.retrieveAllReservations();
-        return listReservation;
+    IReservationService reservationService;
+    @GetMapping("/retrieveReservations")
+    public List<Reservation> retrieveReservations(){
+        List<Reservation> reservations = reservationService.retrieveReservations();
+        return reservations;
     }
-
-    @GetMapping("/getreservation/{reservationid}")
-    public Reservation retrieveReservation(@PathVariable("reservationid") String IdReservation) {
-        return reservationService.retrieveReservation(IdReservation);
-    }
-
-
-    @PostMapping("addreservation")
-    public Reservation addReservation(@RequestBody Reservation r) {
-        Reservation reservation = reservationService.addReservation(r);
+    @PostMapping("/addReservation")
+    public Reservation addReservation(@RequestBody Reservation res){
+        Reservation reservation = reservationService.addReservation(res);
         return reservation;
     }
 
-    @DeleteMapping("/removereservation/{reservationid}")
-    public void removeReservation(@PathVariable("reservationid")String IdReservation) {
-        reservationService.removeReservation(IdReservation);
+    @PutMapping("/updateReservation")
+    public Reservation updateReservation(@RequestBody Reservation res){
+        Reservation reservation =  reservationService.updateReservation(res);
+        return  reservation;
     }
 
-    @PutMapping("updatecreservation")
-    public Reservation updateReservation(@RequestBody Reservation ch) {
-        Reservation reservation = reservationService.updateReservation(ch);
+    @GetMapping("/retrieveReservation/{id-reservation}")
+    public Reservation retrieveReservation(@PathVariable("id-reservation") long idReservation){
+        Reservation reservation = reservationService.retrieveReservation(idReservation);
         return reservation;
     }
-    @GetMapping("/paranneeuniversitaire")
-    public List<Reservation> getReservationParAnneeUniversitaire(
-            @RequestParam("dateDebut") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateDebut,
-            @RequestParam("dateFin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateFin
-    ) {
-        return reservationService.getReservationParAnneeUniversitaire(dateDebut, dateFin);
+
+    @GetMapping("/getReservationParAnneeUniversitaire/{annee-univ}")
+    public List <Reservation> getReservationParAnneeUniversitaire(@PathVariable("annee-univ") Date anneeUniversitaire){
+        List <Reservation> reservations= reservationService.getReservationParAnneeUniversitaire(anneeUniversitaire);
+        return reservations;
     }
 
-    /*@PostMapping("/add")
-    public Reservation addReservation(@RequestParam long idBloc, @RequestParam long cin) {
-        return reservationServicaAvancé.ajouterReservation(idBloc, cin);
-    }*/
+    @GetMapping("/statistiques")
+    public double statistiques(){
+        double pourcentageValides = reservationService.statistiques();
+        return pourcentageValides;
+    }
 
-    @PostMapping("/addres")
-    public Reservation ajouterReservation(@RequestParam long idBloc, @RequestParam long cin) {
-            Reservation reservation = reservationServicaAvancé.ajouterReservation(idBloc, cin);
-            return reservation;
+    @PutMapping("/validerReservation/{id-reservation}")
+    public void validerReservation(@PathVariable("id-reservation") long idReservation){
+        reservationService.validerReservation(idReservation);
     }
 }

@@ -1,19 +1,65 @@
 package tn.esprit.com.foyer.services;
 
-import tn.esprit.com.foyer.entity.Reservation;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import tn.esprit.com.foyer.entities.Reservation;
+import tn.esprit.com.foyer.repositories.ReservationRepository;
 
 import java.util.Date;
 import java.util.List;
 
-public interface ReservationService {
-    List<Reservation> retrieveAllReservations();
+@Service
+@AllArgsConstructor
+public class ReservationService implements IReservationService{
+    ReservationRepository reservationRepository;
+    @Override
+    public Reservation updateReservation(Reservation res) {
 
-    Reservation addReservation(Reservation r);
+        return reservationRepository.save(res);
+    }
 
-    Reservation updateReservation(Reservation r);
+    @Override
+    public Reservation retrieveReservation(long idReservation) {
+        return reservationRepository.findById(idReservation).get();
+    }
 
-    Reservation retrieveReservation(String idReservation);
+    @Override
+    public List<Reservation> getReservationParAnneeUniversitaire(Date anneeUniversitaire) {
+        List <Reservation> reservations = reservationRepository.findReservationByAnneeUniversitaire(anneeUniversitaire);
 
-    void removeReservation(String idReservation);
-    List<Reservation> getReservationParAnneeUniversitaire(Date dateDebut , Date dateFin );
+        return reservations;
+    }
+
+    @Override
+    public Reservation addReservation(Reservation res) {
+        Reservation reservation = reservationRepository.save(res);
+        return reservation;
+    }
+
+    @Override
+    public List<Reservation> retrieveReservations() {
+        List<Reservation> reservations = reservationRepository.findAll();
+        return reservations;
+    }
+
+    @Override
+    public double statistiques() {
+        List<Reservation> reservations = reservationRepository.findAll();
+        // Computer les réservations valides
+        long nombreReservationsValides = reservations.stream()
+                .filter(reservation -> reservation.getEstValid() != null && !Boolean.FALSE.equals(reservation.getEstValid()))                .count();
+        // Calculer le pourcentage
+        double pourcentageValides = (nombreReservationsValides * 100.0) / reservations.size();
+
+        return pourcentageValides;
+    }
+
+    @Override
+    public void validerReservation(long idReservation) {
+        Reservation reservation = reservationRepository.findById(idReservation).get();
+        reservation.setEstValid(true);
+        reservationRepository.save(reservation);
+    }
+
+
 }
