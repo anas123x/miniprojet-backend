@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
     @AllArgsConstructor
-    @RequestMapping("/bloc")
+    @RequestMapping("/api/bloc")
     public class BlocController {
         BlocServices blocServices;
         @GetMapping("/retrieve-all-bloc")

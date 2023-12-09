@@ -29,7 +29,7 @@ public class Bloc implements Serializable {
     Foyer foyer;
     @JsonIgnore
 
-    @OneToMany(mappedBy="bloc" , cascade = CascadeType.ALL , fetch=FetchType.EAGER)
+    @OneToMany(mappedBy="bloc" , cascade = CascadeType.ALL )
     private List<Chambre> chambre;
 
 

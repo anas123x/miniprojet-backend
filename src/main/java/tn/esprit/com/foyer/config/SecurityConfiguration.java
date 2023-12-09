@@ -25,7 +25,7 @@ import static tn.esprit.com.foyer.entities.Role.ADMIN;
 public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST_URL = {"/api/auth/**",
-            "/api/users/**",
+            "/api/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
