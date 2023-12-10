@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class ReservationController {
     IReservationService reservationService;
-    @GetMapping("/retrieveReservations")
+    @GetMapping("/admin/retrieveReservations")
     public List<Reservation> retrieveReservations(){
         List<Reservation> reservations = reservationService.retrieveReservations();
         return reservations;
@@ -27,31 +27,31 @@ public class ReservationController {
         return reservation;
     }
 
-    @PutMapping("/updateReservation")
+    @PutMapping("/admin/updateReservation")
     public Reservation updateReservation(@RequestBody Reservation res){
         Reservation reservation =  reservationService.updateReservation(res);
         return  reservation;
     }
 
-    @GetMapping("/retrieveReservation/{id-reservation}")
+    @GetMapping("/admin/retrieveReservation/{id-reservation}")
     public Reservation retrieveReservation(@PathVariable("id-reservation") long idReservation){
         Reservation reservation = reservationService.retrieveReservation(idReservation);
         return reservation;
     }
 
-    @GetMapping("/getReservationParAnneeUniversitaire/{annee-univ}")
+    @GetMapping("/admin/getReservationParAnneeUniversitaire/{annee-univ}")
     public List <Reservation> getReservationParAnneeUniversitaire(@PathVariable("annee-univ") Date anneeUniversitaire){
         List <Reservation> reservations= reservationService.getReservationParAnneeUniversitaire(anneeUniversitaire);
         return reservations;
     }
 
-    @GetMapping("/statistiques")
+    @GetMapping("/admin/statistiques")
     public double statistiques(){
         double pourcentageValides = reservationService.statistiques();
         return pourcentageValides;
     }
 
-    @PutMapping("/validerReservation/{id-reservation}")
+    @PutMapping("/admin/validerReservation/{id-reservation}")
     public void validerReservation(@PathVariable("id-reservation") long idReservation){
         reservationService.validerReservation(idReservation);
     }

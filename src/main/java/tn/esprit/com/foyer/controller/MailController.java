@@ -8,7 +8,7 @@ import tn.esprit.com.foyer.services.MailService;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/mailer")
+@RequestMapping("/api/admin/mailer")
 public class MailController {
     IMailService mailService;
 

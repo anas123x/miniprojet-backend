@@ -17,11 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 
 @CrossOrigin(origins = "http://localhost:4200")
-@RequestMapping("/api/admin")
+@RequestMapping("/api")
 public class EtudiantController {
     IEtudiantService etudiantService;
 
-    @GetMapping("/retrieve-all-etudiant")
+    @GetMapping("/admin/retrieve-all-etudiant")
     List<Etudiant> retrieveAllEtudiants() {
         List<Etudiant> listEtudiants = etudiantService.retrieveAllEtudiants();
         return listEtudiants;
@@ -29,7 +29,7 @@ public class EtudiantController {
 
     ;
 
-    @PostMapping("/addetudiant")
+    @PostMapping("/admin/addetudiant")
     public Etudiant addEtudiant(@RequestBody Etudiant e) {
         Etudiant etudiant = etudiantService.addEtudiant(e);
         return etudiant;
@@ -50,7 +50,7 @@ public class EtudiantController {
         return etudiantService.retrieveEtudiant(etudiantId);
     }
 
-    @DeleteMapping("/remouve-etudiant/{etudiant-id}")
+    @DeleteMapping("/admin/remove-etudiant/{etudiant-id}")
     void removeEtudiant(@PathVariable("etudiant-id") Long etudiantId) {
 
         etudiantService.removeEtudiant(etudiantId);
@@ -58,7 +58,7 @@ public class EtudiantController {
 
     ;
 
-    @PostMapping("/affecterEtudiantAReservation/{nom-et}/{prenom-et}/{id-reservation}")
+    @PostMapping("/admin/affecterEtudiantAReservation/{nom-et}/{prenom-et}/{id-reservation}")
     public Etudiant affecterEtudiantAReservation(@PathVariable("nom-et") String nomEt, @PathVariable("prenom-et") String prenomEt, @PathVariable("id-reservation") Long idReservation) {
         etudiantService.affecterEtudiantAReservation(nomEt, prenomEt, idReservation);
         return null;
