@@ -13,8 +13,6 @@ import java.util.List;
 @RequestMapping("/universite")
 public class UniversiteController {
     UniversiteServices universiteServices;
-
-
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/retrieve-all-universite")
     public List<Universite> retrieveAllUniversite(){

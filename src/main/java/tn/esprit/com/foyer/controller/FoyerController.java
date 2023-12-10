@@ -17,7 +17,7 @@ import java.util.Set;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/foyer")
+@RequestMapping("/api")
 public class FoyerController {
     FoyerServices foyerServices;
 MaintenanceServices maintenanceServices;
@@ -26,30 +26,30 @@ MaintenanceServices maintenanceServices;
         return foyerServices.retrieveAllFoyers();
     }
 
-    @GetMapping("/retrieve-foyer/{foyer-id}")
+    @GetMapping("/admin/foyer/retrieve-foyer/{foyer-id}")
     public Foyer retrieveFoyer(@PathVariable("foyer-id") Long foyerId){
         return foyerServices.retrieveFoyer(foyerId);
     }
 
-    @PostMapping("/add-foyer")
+    @PostMapping("/admin/foyer/add-foyer")
     public Foyer addFoyer(@RequestBody Foyer f){
         return foyerServices.addFoyer(f);
     }
-    @DeleteMapping("/delete-foyer/{foyer-id}")
+    @DeleteMapping("/admin/foyer/delete-foyer/{foyer-id}")
     public void deleteFoyer(@PathVariable("foyer-id") Long foyerId){
         foyerServices.deleteFoyer(foyerId);
     }
 
-    @PostMapping("/archiver-foyer/{foyer-id}")
+    @PostMapping("/admin/foyer/archiver-foyer/{foyer-id}")
     public void archiverFoyer(@PathVariable("foyer-id") Long foyerId){
         foyerServices.archiverFoyer(foyerId);
     }
-    @GetMapping("/pourcentage-par-etat")
+    @GetMapping("/admin/foyer/pourcentage-par-etat")
     public ResponseEntity<Set<TypeBlocPourcentage>> calculerPourcentageBlocParEtat() {
         Set<TypeBlocPourcentage> pourcentages = foyerServices.calculerPourcentageBlocParEtat();
         return new ResponseEntity<>(pourcentages, HttpStatus.OK);
     }
-    @GetMapping("/export")
+    @GetMapping("/admin/foyer/export")
     public void exportToExcel(HttpServletResponse response) {
         try {
             // Appeler la méthode du service pour obtenir le workbook

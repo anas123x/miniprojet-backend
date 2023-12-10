@@ -15,28 +15,28 @@ import java.util.Map;
 
 @RestController
     @AllArgsConstructor
-    @RequestMapping("/api/bloc")
+    @RequestMapping("/api")
     public class BlocController {
         BlocServices blocServices;
-        @GetMapping("/retrieve-all-bloc")
+        @GetMapping("bloc/retrieve-all-bloc")
         public List<Bloc> retrieveAllBloc(){
             return blocServices.retrieveAllBlocs();
         }
-        @GetMapping("/retrieve-bloc/{bloc-id}")
+        @GetMapping("/admin/retrieve-bloc/{bloc-id}")
         public Bloc retrieveBloc(@PathVariable("bloc-id") Long blocId){
             return blocServices.retrieveBloc(blocId);
         }
 
-        @PostMapping("/add-bloc")
+        @PostMapping("/admin/add-bloc")
         public Bloc addBloc(@RequestBody Bloc bloc){
             return blocServices.addBloc(bloc);
         }
 
-        @DeleteMapping("/delete-bloc/{bloc-id}")
+        @DeleteMapping("/admin/delete-bloc/{bloc-id}")
         public void deleteBloc(@PathVariable("bloc-id") Long blocId){
             blocServices.removeBloc(blocId);
         }
-    @GetMapping("{id}/generate-pdf")
+    @GetMapping("/admin/{id}/generate-pdf")
     public ResponseEntity<byte[]> generateChambrePdf(@PathVariable Long id) throws IOException {
         Bloc bloc = blocServices.retrieveBloc(id);// ... remplacez par votre logique d'obtention d'utilisateur
         // Générez le PDF
@@ -45,7 +45,7 @@ import java.util.Map;
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK); }
 
 
-    @GetMapping("/infos-blocs")
+    @GetMapping("/admin/infos-blocs")
     public ResponseEntity<List<Map<String, Object>>> obtenirInfosBlocsParFoyer() {
         List<Map<String, Object>> blocsInfos = blocServices.obtenirInfosBlocsParFoyer();
         return new ResponseEntity<>(blocsInfos, HttpStatus.OK);
