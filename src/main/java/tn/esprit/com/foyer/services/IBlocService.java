@@ -1,6 +1,7 @@
 package tn.esprit.com.foyer.services;
 
 import tn.esprit.com.foyer.entities.Bloc;
+import tn.esprit.com.foyer.entities.Foyer;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,5 +19,7 @@ public interface IBlocService {
     void removeBloc(Long idBloc);
     byte[] generatePdfForBloc(Bloc bloc) throws IOException;
     List<Map<String, Object>> obtenirInfosBlocsParFoyer();
+    List<Bloc> findByFoyer(Foyer foyer);
+
 
 }

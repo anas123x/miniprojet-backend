@@ -192,4 +192,8 @@ public class BlocServices implements IBlocService{
         }
 
     }*/
+    @Override
+    public List<Bloc> findByFoyer(Foyer foyer) {
+        return blocRepository.findByFoyer(foyer);
+    }
 }

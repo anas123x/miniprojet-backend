@@ -6,8 +6,11 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.com.foyer.entities.Bloc;
 import tn.esprit.com.foyer.entities.Foyer;
 import tn.esprit.com.foyer.entities.TypeBlocPourcentage;
+import tn.esprit.com.foyer.repositories.FoyerRepository;
+import tn.esprit.com.foyer.services.BlocServices;
 import tn.esprit.com.foyer.services.FoyerServices;
 import tn.esprit.com.foyer.services.MaintenanceServices;
 
@@ -17,9 +20,12 @@ import java.util.Set;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("http://localhost:4200")
 @RequestMapping("/api")
 public class FoyerController {
     FoyerServices foyerServices;
+    BlocServices blocServices;
+    FoyerRepository foyerRepository;
 MaintenanceServices maintenanceServices;
     @GetMapping("/retrieve-all-foyer")
     public List<Foyer> retrieveAllFoyer(){
@@ -49,6 +55,10 @@ MaintenanceServices maintenanceServices;
         Set<TypeBlocPourcentage> pourcentages = foyerServices.calculerPourcentageBlocParEtat();
         return new ResponseEntity<>(pourcentages, HttpStatus.OK);
     }
+    @PutMapping("/admin/modifier-foyer/{foyer-id}")
+    public void modifierFoyer(@PathVariable("foyer-id") Long foyerId,@RequestBody Foyer f){
+        foyerServices.updateFoyer(f);
+    }
     @GetMapping("/admin/foyer/export")
     public void exportToExcel(HttpServletResponse response) {
         try {
@@ -74,4 +84,5 @@ MaintenanceServices maintenanceServices;
             e.printStackTrace();
         }
     }
+
 }
