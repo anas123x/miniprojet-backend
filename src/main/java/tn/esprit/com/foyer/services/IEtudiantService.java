@@ -1,5 +1,6 @@
 package tn.esprit.com.foyer.services;
 
+import tn.esprit.com.foyer.entities.Chambre;
 import tn.esprit.com.foyer.entities.Etudiant;
 import tn.esprit.com.foyer.entities.Reservation;
 import tn.esprit.com.foyer.mailModel.MailStructure;
@@ -23,6 +24,7 @@ public interface IEtudiantService {
     public void passerUneReservation(long idEtudiant, Reservation res);
 
     public Etudiant findEtudiantwithemail(String email);
+    public void passerUneReservation2(long idEtudiant , Reservation res, Long numchambre);
 
 
 }

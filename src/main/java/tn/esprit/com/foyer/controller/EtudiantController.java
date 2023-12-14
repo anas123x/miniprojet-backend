@@ -76,5 +76,9 @@ public class EtudiantController {
         return etudiant;
     }
 
+    @PostMapping("/passerUneReservation2/{id-etudiant}/{num-chambre}")
+    public void passerUneReservation2(@PathVariable("id-etudiant") long idEtudiant,@PathVariable("num-chambre") long numchambre, @RequestBody Reservation res){
+        etudiantService.passerUneReservation2(idEtudiant ,res,numchambre);
+    }
 
 }

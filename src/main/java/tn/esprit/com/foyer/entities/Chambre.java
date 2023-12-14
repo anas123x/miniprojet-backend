@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,7 +29,7 @@ public class Chambre implements Serializable {
     @ManyToOne
     Bloc bloc;
     @OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
-    private Set<Reservation> reservations;
+    private List<Reservation> reservations;
 
 
 

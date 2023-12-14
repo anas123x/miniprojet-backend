@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import tn.esprit.com.foyer.entities.Chambre;
 import tn.esprit.com.foyer.entities.Etudiant;
 import tn.esprit.com.foyer.entities.Reservation;
 import tn.esprit.com.foyer.mailModel.MailStructure;
+import tn.esprit.com.foyer.repositories.ChambreRepository;
 import tn.esprit.com.foyer.repositories.EtudiantRepository;
 import tn.esprit.com.foyer.repositories.ReservationRepository;
 
@@ -24,6 +26,8 @@ public class EtudiantService implements IEtudiantService{
     EtudiantRepository etudiantRepository;
     ReservationRepository reservationRepository;
     ReservationService reservationService;
+    ChambreRepository chambreRepository;
+    ChambreServices chambreServices;
 
     @Override
     public List<Etudiant> retrieveAllEtudiants() {
@@ -86,7 +90,35 @@ public class EtudiantService implements IEtudiantService{
         return etudiant;
     }
 
+    @Override
+    public void passerUneReservation2(long idEtudiant, Reservation res, Long numchambre) {
+        Etudiant etudiant = etudiantRepository.findById(idEtudiant).get();
+        if (!chambreServices.isChambreDisponible(numchambre, chambreRepository.findChambreByNumeroChambre(numchambre).getTypeC())) {
+            // Gérer le cas où la chambre n'est pas disponible en lançant une exception
+            throw new ChambreNonDisponibleException("La chambre n'est pas disponible pour une réservation de ce type.");
+        }
+        Reservation reservation = reservationService.addReservation( res);
+        List<Reservation> reservations = new ArrayList<>();
+        if (etudiant.getReservations() != null){
+            reservations = etudiant.getReservations();
+        }
+        reservations.add(reservation);
+        etudiant.setReservations(reservations);
+        etudiantRepository.save(etudiant);
 
+        Chambre chambre = chambreRepository.findChambreByNumeroChambre(numchambre);
+        if (chambre != null) {
+            List<Reservation> chambreReservations = chambre.getReservations();
+            chambreReservations.add(reservation);
+            chambre.setReservations(chambreReservations);
+            chambreRepository.save(chambre);
+        }
+    }
+    public class ChambreNonDisponibleException extends RuntimeException {
+        public ChambreNonDisponibleException(String message) {
+            super(message);
+        }
+    }
 
 
 }

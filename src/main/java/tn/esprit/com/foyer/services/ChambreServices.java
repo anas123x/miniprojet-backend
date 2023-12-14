@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.com.foyer.entities.Bloc;
 import tn.esprit.com.foyer.entities.Chambre;
+import tn.esprit.com.foyer.entities.TypeChambre;
 import tn.esprit.com.foyer.repositories.BlocRepository;
 import tn.esprit.com.foyer.repositories.ChambreRepository;
 
@@ -46,6 +47,29 @@ public class ChambreServices implements IChambreService{
     @Override
     public void removeChambre(Long idChambre) {
         chambreRepository.deleteById(idChambre);
+    }
+
+    @Override
+    public boolean isChambreDisponible(Long numeroChambre, TypeChambre typeC) {
+        Chambre chambre = chambreRepository.findChambreByNumeroChambre(numeroChambre);
+        if (chambre == null || chambre.getTypeC() != typeC) {
+            return false; // La chambre n'existe pas ou le type ne correspond pas
+        }
+
+        int nombreMaxReservations = 0;
+        switch (typeC) {
+            case SIMPLE:
+                nombreMaxReservations = 1;
+                break;
+            case DOUBLE:
+                nombreMaxReservations = 2;
+                break;
+            case TRIPLE:
+                nombreMaxReservations = 3;
+                break;
+        }
+
+        return chambre.getReservations().size() < nombreMaxReservations;
     }
 
     public Bloc affecterChambresABloc(List<Long> numChambre, String nomBloc)
